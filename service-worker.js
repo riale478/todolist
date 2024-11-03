@@ -1,10 +1,11 @@
-const CACHE_NAME = 'my-pwa-cache-v1';
+// service-worker.js
+
+const CACHE_NAME = 'todo-app-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/script.js',
+  '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
