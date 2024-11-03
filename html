@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2F3BA2">
+  <link rel="manifest" href="manifest.json">
+  <title>My PWA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 { color: #2F3BA2; }
+    .task {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>오늘의 할 일</h1>
+  <div class="task">운동하기</div>
+  <div class="task">수학 공부</div>
+  <div class="task">설거지 하기</div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+        }).catch(function(error) {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
+  </script>
+</body>
+</html>
