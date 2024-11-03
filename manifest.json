@@ -1,20 +1,78 @@
-{
-  "name": "My PWA",
-  "short_name": "PWA",
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2F3BA2",
-  "icons": [
-    {
-      "src": "/icons/icon-192x192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ]
+// 할 일 목록을 로컬 저장소에 저장하고 불러오기 위한 key
+const STORAGE_KEY = 'todo_tasks';
+const taskListElement = document.getElementById('task-list');
+const taskInputElement = document.getElementById('task-input');
+const dateInputElement = document.getElementById('date-input');
+
+// 초기화
+document.addEventListener('DOMContentLoaded', loadTasks);
+
+// 할 일을 추가하는 함수
+function addTask() {
+  const taskText = taskInputElement.value;
+  const selectedDate = dateInputElement.value;
+
+  if (taskText === '' || selectedDate === '') {
+    alert('할 일과 날짜를 입력하세요.');
+    return;
+  }
+
+  const task = {
+    text: taskText,
+    date: selectedDate,
+    completed: false
+  };
+
+  // 저장 후 UI 갱신
+  saveTask(task);
+  renderTask(task);
+  taskInputElement.value = ''; // 입력 칸 비우기
+}
+
+// 로컬 저장소에 할 일 저장
+function saveTask(task) {
+  const tasks = getTasks();
+  tasks.push(task);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// 로컬 저장소에서 할 일 불러오기
+function getTasks() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
+// 로드 시 저장된 할 일 불러오기
+function loadTasks() {
+  const tasks = getTasks();
+  tasks.forEach(task => {
+    renderTask(task);
+  });
+}
+
+// 할 일 항목을 렌더링
+function renderTask(task) {
+  const taskItem = document.createElement('li');
+  taskItem.classList.add('task-item');
+  if (task.completed) {
+    taskItem.classList.add('completed');
+  }
+
+  taskItem.innerHTML = `
+    <span>${task.date}: ${task.text}</span>
+    <input type="checkbox" ${task.completed ? 'checked' : ''} onclick="toggleTaskCompletion('${task.text}')">
+  `;
+
+  taskListElement.appendChild(taskItem);
+}
+
+// 할 일 완료 상태 토글
+function toggleTaskCompletion(taskText) {
+  const tasks = getTasks();
+  const task = tasks.find(t => t.text === taskText);
+  task.completed = !task.completed;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+
+  // UI 갱신
+  taskListElement.innerHTML = '';
+  loadTasks();
 }
